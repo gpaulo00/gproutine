@@ -26,7 +26,7 @@ export default [
       { dest: pkg.module, format: "es" },
     ],
     plugins: [
-      babel(config),
+      babel(),
     ],
-  }
+  },
 ]
