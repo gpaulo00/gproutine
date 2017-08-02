@@ -1,0 +1,29 @@
+{
+  "name": "gproutine",
+  "version": "0.0.1",
+  "description": "Fancy coroutine helper for JavaScript",
+  "author": {
+    "name": "Gustavo Paulo",
+    "email": "gustavo.paulo.segura@gmail.com",
+    "url": "https://github.com/gpaulo00"
+  },
+  "license": "MIT",
+  "main": "dist/main.cjs.js",
+  "module": "dist/main.esm.js",
+  "browser": "dist/main.umd.js",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.0",
+    "eslint": "^4.3.0",
+    "eslint-config-airbnb-base": "^11.3.1",
+    "eslint-plugin-import": "^2.7.0",
+    "rollup": "^0.45.2",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-watch": "^4.3.1"
+  }
+}
