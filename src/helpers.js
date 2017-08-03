@@ -15,3 +15,7 @@ export function isGeneratorFunction(obj) {
   if (name === valid || displayName === valid) return true
   return isGenerator(prototype)
 }
+
+export function isEffect(obj) {
+  return obj["@@gproutine/IO"] === true && obj.type
+}

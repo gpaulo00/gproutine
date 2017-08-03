@@ -1,5 +1,9 @@
 
-import { isPromise, isGenerator, isGeneratorFunction } from "./helpers"
+import actions from "./actions"
+import {
+  isPromise, isGenerator,
+  isGeneratorFunction, isEffect,
+} from "./helpers"
 
 export default function handler(iterator) {
   const i = isGenerator(iterator) ? iterator : iterator()
@@ -30,9 +34,20 @@ export function nested(iter, old) {
 }
 
 export function toPromise(obj) {
+  if (!obj) return Promise.resolve(obj)
   if (isPromise(obj)) return obj
   if (isGenerator(obj)) return nested(obj)
   if (isGeneratorFunction(obj)) return handler(obj)
   if (Array.isArray(obj)) return Promise.all(obj.map(toPromise, this))
+
+  if (isEffect(obj)) return handleEffect(obj)
   return Promise.resolve(obj)
+}
+
+export function handleEffect(effect) {
+  const action = actions.get(effect.type)
+  if (!action) return Promise.reject("action not defined")
+
+  const result = action(...effect.args)
+  return toPromise(result)
 }
