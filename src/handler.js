@@ -1,5 +1,6 @@
 
 import actions from "./actions"
+import yields from "./yieldhandlers"
 import {
   isPromise, isGenerator,
   isGeneratorFunction, isEffect,
@@ -63,6 +64,14 @@ export function toPromise(obj) {
   if (Array.isArray(obj)) return Promise.all(obj.map(toPromise, this))
 
   if (isEffect(obj)) return handleEffect(obj)
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const f of yields) {
+    const result = f(obj)
+    // should be a promise
+    if (result && isPromise(result)) return result
+  }
+
   return Promise.resolve(obj)
 }
 
