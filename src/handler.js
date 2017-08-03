@@ -1,9 +1,10 @@
 
-import { isPromise } from "./helpers"
+import { isPromise, isGenerator, isGeneratorFunction } from "./helpers"
 
 export default function handler(iterator) {
-  const iter = iterator.next()
-  return nested(iterator, iter.value)
+  const i = isGenerator(iterator) ? iterator : iterator()
+  const iter = i.next()
+  return nested(i, iter.value)
 }
 
 export function nested(iter, old) {
@@ -30,5 +31,8 @@ export function nested(iter, old) {
 
 export function toPromise(obj) {
   if (isPromise(obj)) return obj
+  if (isGenerator(obj)) return nested(obj)
+  if (isGeneratorFunction(obj)) return handler(obj)
+  if (Array.isArray(obj)) return Promise.all(obj.map(toPromise, this))
   return Promise.resolve(obj)
 }
