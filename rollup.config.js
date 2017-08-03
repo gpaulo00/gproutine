@@ -9,7 +9,20 @@ import pkg from "./package.json"
 
 const production = process.env.NODE_ENV === "production" ? [uglify({}, minify)] : []
 const regular = [
-  babel(),
+  babel({
+    exclude: "node_modules/**",
+    babelrc: false,
+    presets: [
+      ["env", {
+        targets: {
+          node: "current",
+        },
+        loose: false,
+        modules: false,
+      }],
+    ],
+    plugins: ["external-helpers"],
+  }),
 ].concat(production)
 
 export default [
