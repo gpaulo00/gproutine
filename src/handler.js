@@ -8,6 +8,9 @@ import {
 export default function handler(iterator) {
   const i = isGenerator(iterator) ? iterator : iterator()
   const iter = i.next()
+  if (iter.done) {
+    return Promise.resolve(iter.value)
+  }
   return nested(i, iter.value)
 }
 
@@ -16,7 +19,7 @@ export function nested(iter, old) {
     if (!i.done) {
       nested(gen, i.value).then(resolve)
     } else {
-      resolve("generator iteration finished")
+      resolve(i.value)
     }
   }
 
