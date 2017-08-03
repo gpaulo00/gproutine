@@ -13,31 +13,32 @@ import {
  * @return {Promise}      Runtime Promise
  */
 export default function handler(iterator, old) {
+  // only accept generators and generator functions
   if (!isGenerator(iterator) && !isGeneratorFunction(iterator)) {
     throw new Error("the argument isn't a generator")
   }
+  // is a function or an iterator?
   const iter = isGenerator(iterator) ? iterator : iterator()
 
-  function callback(gen, i, resolve, reject) {
-    if (!i.done) {
-      handler(gen, i.value).then(resolve).catch(reject)
-    } else {
-      resolve(i.value)
-    }
-  }
-
   return new Promise((resolve, reject) => {
-    const args = [resolve, reject]
+    /**
+     * Call recursively to iterate the generator
+     * @param  {object}   i The iteration object
+     * @return {Function}   This function
+     */
+    function callback(i) {
+      if (!i.done) {
+        handler(iter, i.value).then(resolve).catch(reject)
+      } else {
+        resolve(i.value)
+      }
+    }
 
     toPromise(old)
-      .then((res) => {
-        const i = iter.next(res)
-        callback(iter, i, ...args)
-      })
+      .then(res => callback(iter.next(res)))
       .catch((err) => {
         try {
-          const i = iter.throw(err)
-          callback(iter, i, ...args)
+          callback(iter.throw(err))
         } catch (error) {
           reject(error)
         }
