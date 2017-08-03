@@ -67,9 +67,13 @@ export function toPromise(obj) {
 
   // eslint-disable-next-line no-restricted-syntax
   for (const f of yields) {
-    const result = f(obj)
-    // should be a promise
-    if (result && isPromise(result)) return result
+    try {
+      const result = f(obj)
+      if (result && isPromise(result)) return result
+    } catch (err) {
+      // yield handler throwed an error
+      return Promise.reject(err)
+    }
   }
 
   return Promise.resolve(obj)
