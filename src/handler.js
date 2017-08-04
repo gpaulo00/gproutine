@@ -65,8 +65,6 @@ export function toPromise(obj) {
   if (Array.isArray(obj)) return Promise.all(obj.map(toPromise, this))
 
   if (isEffect(obj)) return handleEffect(obj)
-
-  // eslint-disable-next-line no-restricted-syntax
   for (const f of yields) {
     try {
       const result = f(obj)
@@ -77,6 +75,7 @@ export function toPromise(obj) {
     }
   }
 
+  if (obj.constructor === Object) return objectToPromise(obj)
   return Promise.resolve(obj)
 }
 
@@ -91,4 +90,28 @@ export function handleEffect(effect) {
 
   const result = action(...effect.args)
   return toPromise(result)
+}
+
+/**
+ * Resolves an object with promises
+ * @param  {Object} obj Object to Resolve
+ * @return {Promise}     Future Resolved Object
+ */
+function objectToPromise(obj) {
+  const results = new obj.constructor()
+  const promises = []
+
+  for (const key of Object.keys(obj)) {
+    const promise = toPromise(obj[key])
+    if (promise && isPromise(promise)) {
+      results[key] = undefined
+      promises.push(promise.then((res) => {
+        results[key] = res
+      }))
+    } else {
+      results[key] = obj[key]
+    }
+  }
+
+  return Promise.all(promises).then(() => results)
 }

@@ -17,15 +17,15 @@ npm i -S gproutine
 
 ## Features
 It has most of [co](https://github.com/tj/co)/[bluebird](https://github.com/petkaantonov/bluebird) features, like:
-- [x] Await for array of promises
-- [x] Yielding another generators
-- [ ] Resolve object properties
-- [x] Add yield handlers (like Bluebird.coroutine)
+- Await for array of promises
+- Yielding another generators
+- Resolve object properties
+- Add yield handlers (like Bluebird.coroutine)
 
 It also adds some own features, like:
-- [x] Smaller (0.5KB vs 0.9KB of **co**, minified and gzipped)
-- [x] Custom actions and effects
-- [ ] Use ES2015 Generators as actions
+- Written in ES2015 syntax
+- Smaller (0.5KB vs 0.9KB of **co**, minified and gzipped)
+- Custom actions and effects
 
 **NOTE**: GPRoutine will not have support for thunk actions (I think)
 
