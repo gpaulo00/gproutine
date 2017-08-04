@@ -14,6 +14,17 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "rollup",
+    "coroutine",
+    "promise",
+    "es2015",
+    "generators"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gpaulo00/gproutine.git"
+  },
   "scripts": {
     "build": "NODE_ENV=production rollup -c",
     "watch": "rollup -c -w",
