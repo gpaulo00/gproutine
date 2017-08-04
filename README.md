@@ -6,7 +6,7 @@ This project is strongly inspired by the [co](https://github.com/tj/co)
 library and the [redux-saga](https://github.com/redux-saga/redux-saga) effects.
 
 ## Installation
-**GPRoutine** is very small yet (less than 0.6KB gzipped), it also hasn't any dependency.
+**GPRoutine** is very small yet (less than **0.6KB gzipped**), it also hasn't any dependency.
 You can install it with:
 ```sh
 yarn add gproutine
@@ -16,15 +16,16 @@ npm i -S gproutine
 ```
 
 ## Features
-It has most of [co](https://github.com/tj/co)/[bluebird](https://github.com/petkaantonov/bluebird) features, like:
+It has most of the [co](https://github.com/tj/co) and [bluebird.coroutine](https://github.com/petkaantonov/bluebird)
+features, like:
 - Await for array of promises
-- Yielding another generators
+- Yield another generators
 - Resolve object properties
 - Add yield handlers (like Bluebird.coroutine)
 
 It also adds some own features, like:
 - Written in ES2015 syntax
-- Smaller (0.5KB vs 0.9KB of **co**, minified and gzipped)
+- Very Small
 - Custom actions and effects
 
 **NOTE**: GPRoutine will not have support for thunk actions (I think)
@@ -33,9 +34,8 @@ It also adds some own features, like:
 This library allows to write **non-blocking code** in a
 more readable synchronous-like way (like [co](https://github.com/tj/co)).
 
-These functions are equivalents:
+#### Using Promises
 ```js
-// using promises
 function asyncFunc() {
   Promise.resolve(true)
     .then((result) => {
@@ -43,15 +43,27 @@ function asyncFunc() {
     })
 }
 asyncFunc() // call the function
+```
 
-// using ES7 async/await
+#### Using ES7 Async/Await
+You can use this syntax in the current NodeJS version without transpiling,
+but with most browsers you'll need to use [Babel](https://github.com/babel/babel).
+```js
 async function asyncFunc() {
   const result = await Promise.resolve(true)
   console.log(result)
 }
 asyncFunc() // call the async function
+```
 
-// using gproutine or co
+#### Using a GPRoutine
+This syntax is very similar to the **async** functions, but it
+need to be wrapped with a couroutine library (see 
+[bluebird](https://github.com/petkaantonov/bluebird), [co](https://github.com/tj/co)
+and [Q](https://github.com/kriskowal/q)).
+
+As advantage, this is the **most testable** option.
+```js
 import { handler } from "gproutine"
 import co from "co"
 
@@ -63,9 +75,6 @@ function* asyncFunc() {
 handler(asyncFunc) // call the function with gproutine
 co(asyncFunc) // it can also be called with co
 ```
-
-The most readable function is the ES7 syntax, but it's
-a [proposal](https://github.com/lukehoban/ecmascript-asyncawait) right now
 
 ### Yield Handlers
 You can add more handlers for your ***yields*** (like **Bluebird** does).
